@@ -1,6 +1,10 @@
 <script lang="tsx">
 import { defineComponent, ref, watch } from 'vue';
 import type { PropType } from 'vue';
+import MarkdownIt from 'vue3-markdown-it';
+import 'highlight.js/styles/github.css';
+import hljs from 'highlight.js';
+import markdownItGfm from 'markdown-it-gfm';
 import {
   TodoWidget,
   LSWidget,
@@ -46,6 +50,29 @@ export interface ClaudeStreamMessage {
 
 function cn(...classes: (string | undefined | null | false)[]) {
   return classes.filter(Boolean).join(' ');
+}
+
+function renderMarkdown(text: string) {
+  return (
+    <MarkdownIt
+      source={text}
+      options={{
+        highlight: (str: string, lang: string) => {
+          if (lang && hljs.getLanguage(lang)) {
+            try {
+              return `<pre class='hljs'><code>${hljs.highlight(str, { language: lang }).value}</code></pre>`;
+            } catch (__) {}
+          }
+          return `<pre class='hljs'><code>${MarkdownIt.utils.escapeHtml(str)}</code></pre>`;
+        },
+        html: false,
+        linkify: true,
+        typographer: true,
+      }}
+      plugins={[markdownItGfm]}
+      class="prose prose-sm max-w-none"
+    />
+  );
 }
 
 export default defineComponent({
@@ -106,7 +133,7 @@ export default defineComponent({
                     if (content.type === 'text') {
                       const textContent = typeof content.text === 'string' ? content.text : (content.text?.text || JSON.stringify(content.text || content));
                       renderedSomething = true;
-                      return <div key={idx} class="prose prose-sm max-w-none">{textContent}</div>;
+                      return <div key={idx}>{renderMarkdown(textContent)}</div>;
                     }
                     // 思考内容
                     if (content.type === 'thinking') {
