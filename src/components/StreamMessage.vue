@@ -11,6 +11,19 @@ import {
   ThinkingWidget,
   TaskWidget,
   SystemInitializedWidget,
+  EditWidget,
+  MultiEditWidget,
+  MCPWidget,
+  TodoReadWidget,
+  GlobWidget,
+  BashWidget,
+  WriteWidget,
+  GrepWidget,
+  EditResultWidget,
+  MultiEditResultWidget,
+  SystemReminderWidget,
+  WebSearchWidget,
+  WebFetchWidget,
 } from './tool-widgets-vue/WidgetIndex';
 import { Card, CardContent } from './ui-vue/Card';
 
@@ -112,19 +125,23 @@ export default defineComponent({
                       }
                       if (toolName === 'edit' && input?.file_path) {
                         renderedSomething = true;
-                        return <div key={idx}>[EditWidget 需迁移]</div>;
+                        return <EditWidget key={idx} {...input} result={toolResult} />;
                       }
                       if (toolName === 'multiedit' && input?.file_path && input?.edits) {
                         renderedSomething = true;
-                        return <div key={idx}>[MultiEditWidget 需迁移]</div>;
+                        return <MultiEditWidget key={idx} {...input} result={toolResult} />;
                       }
                       if (content.name?.startsWith('mcp__')) {
                         renderedSomething = true;
-                        return <div key={idx}>[MCPWidget 需迁移]</div>;
+                        return <MCPWidget key={idx} toolName={content.name} input={input} result={toolResult} />;
                       }
                       if (toolName === 'todowrite' && input?.todos) {
                         renderedSomething = true;
                         return <TodoWidget key={idx} todos={input.todos} result={toolResult} />;
+                      }
+                      if (toolName === 'todoread') {
+                        renderedSomething = true;
+                        return <TodoReadWidget key={idx} todos={input?.todos} result={toolResult} />;
                       }
                       if (toolName === 'ls' && input?.path) {
                         renderedSomething = true;
@@ -133,6 +150,30 @@ export default defineComponent({
                       if (toolName === 'read' && input?.file_path) {
                         renderedSomething = true;
                         return <ReadWidget key={idx} filePath={input.file_path} result={toolResult} />;
+                      }
+                      if (toolName === 'glob' && input?.pattern) {
+                        renderedSomething = true;
+                        return <GlobWidget key={idx} pattern={input.pattern} result={toolResult} />;
+                      }
+                      if (toolName === 'bash' && input?.command) {
+                        renderedSomething = true;
+                        return <BashWidget key={idx} command={input.command} description={input.description} result={toolResult} />;
+                      }
+                      if (toolName === 'write' && input?.file_path && input?.content) {
+                        renderedSomething = true;
+                        return <WriteWidget key={idx} filePath={input.file_path} content={input.content} result={toolResult} />;
+                      }
+                      if (toolName === 'grep' && input?.pattern) {
+                        renderedSomething = true;
+                        return <GrepWidget key={idx} pattern={input.pattern} include={input.include} path={input.path} exclude={input.exclude} result={toolResult} />;
+                      }
+                      if (toolName === 'websearch' && input?.query) {
+                        renderedSomething = true;
+                        return <WebSearchWidget key={idx} query={input.query} result={toolResult} />;
+                      }
+                      if (toolName === 'webfetch' && input?.url) {
+                        renderedSomething = true;
+                        return <WebFetchWidget key={idx} url={input.url} prompt={input.prompt} result={toolResult} />;
                       }
                       // 其他工具类型可继续补充
                       return null;
