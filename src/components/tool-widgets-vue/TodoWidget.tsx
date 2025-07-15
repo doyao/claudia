@@ -1,11 +1,6 @@
 import { defineComponent } from 'vue';
 import { Badge } from '../ui-vue/Badge';
-
-// TODO: 替换为 lucide-vue-next 图标组件
-const CheckCircle2 = () => <span style={{color: 'green'}}>✔️</span>;
-const Clock = () => <span style={{color: 'blue'}}>🕒</span>;
-const Circle = () => <span style={{color: 'gray'}}>●</span>;
-const FileEdit = () => <span style={{color: '#888'}}>📝</span>;
+import { CheckCircle2, Clock, Circle, FileEdit } from 'lucide-vue-next';
 
 function cn(...classes: (string | undefined | null | false)[]) {
   return classes.filter(Boolean).join(' ');
@@ -22,9 +17,9 @@ export const TodoWidget = defineComponent({
   },
   setup(props) {
     const statusIcons: Record<string, any> = {
-      completed: <CheckCircle2 />,
-      in_progress: <Clock />,
-      pending: <Circle />,
+      completed: <CheckCircle2 class="h-4 w-4 text-green-500" />,
+      in_progress: <Clock class="h-4 w-4 text-blue-500 animate-pulse" />,
+      pending: <Circle class="h-4 w-4 text-muted-foreground" />,
     };
     const priorityColors: Record<string, string> = {
       high: 'bg-red-500/10 text-red-500 border-red-500/20',
@@ -34,7 +29,7 @@ export const TodoWidget = defineComponent({
     return () => (
       <div class="space-y-2">
         <div class="flex items-center gap-2 mb-3">
-          <FileEdit />
+          <FileEdit class="h-4 w-4 text-primary" />
           <span class="text-sm font-medium">Todo List</span>
         </div>
         <div class="space-y-2">

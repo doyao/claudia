@@ -1,13 +1,6 @@
 import { defineComponent, ref } from 'vue';
 import { Card } from '../ui-vue/Card';
-
-// TODO: 替换为 lucide-vue-next 图标组件
-const FolderOpen = () => <span style={{color: 'blue'}}>📂</span>;
-const Folder = () => <span style={{color: 'blue'}}>📁</span>;
-const FileText = () => <span style={{color: '#888'}}>📄</span>;
-const FileCode = () => <span style={{color: 'orange'}}>📝</span>;
-const Terminal = () => <span style={{color: 'green'}}>💻</span>;
-const ChevronRight = (props: { rotated?: boolean }) => <span style={{display:'inline-block',transform:props.rotated?'rotate(90deg)':'none'}}>▶️</span>;
+import { FolderOpen, Folder, FileText, FileCode, Terminal, ChevronRight } from 'lucide-vue-next';
 
 function cn(...classes: (string | undefined | null | false)[]) {
   return classes.filter(Boolean).join(' ');
@@ -82,25 +75,25 @@ export const LSResultWidget = defineComponent({
       const isExpanded = expandedDirs.value.has(entry.path) || isRoot;
       const getIcon = () => {
         if (entry.type === 'directory') {
-          return isExpanded ? <FolderOpen /> : <Folder />;
+          return isExpanded ? <FolderOpen class="h-3.5 w-3.5 text-blue-500" /> : <Folder class="h-3.5 w-3.5 text-blue-500" />;
         }
         const ext = entry.name.split('.').pop()?.toLowerCase();
         switch (ext) {
-          case 'rs': return <FileCode />;
+          case 'rs': return <FileCode class="h-3.5 w-3.5 text-orange-500" />;
           case 'toml':
           case 'yaml':
           case 'yml':
-          case 'json': return <FileText />;
-          case 'md': return <FileText />;
+          case 'json': return <FileText class="h-3.5 w-3.5 text-yellow-500" />;
+          case 'md': return <FileText class="h-3.5 w-3.5 text-blue-400" />;
           case 'js':
           case 'jsx':
           case 'ts':
-          case 'tsx': return <FileCode />;
-          case 'py': return <FileCode />;
-          case 'go': return <FileCode />;
+          case 'tsx': return <FileCode class="h-3.5 w-3.5 text-yellow-400" />;
+          case 'py': return <FileCode class="h-3.5 w-3.5 text-blue-500" />;
+          case 'go': return <FileCode class="h-3.5 w-3.5 text-cyan-500" />;
           case 'sh':
-          case 'bash': return <Terminal />;
-          default: return <FileText />;
+          case 'bash': return <Terminal class="h-3.5 w-3.5 text-green-500" />;
+          default: return <FileText class="h-3.5 w-3.5 text-muted-foreground" />;
         }
       };
       return (
@@ -110,7 +103,7 @@ export const LSResultWidget = defineComponent({
             onClick={() => entry.type === 'directory' && hasChildren && toggleDirectory(entry.path)}
           >
             {entry.type === 'directory' && hasChildren ? (
-              <ChevronRight rotated={isExpanded} />
+              <ChevronRight class={cn('h-3 w-3 text-muted-foreground transition-transform', isExpanded && 'rotate-90')} />
             ) : (
               <span style={{width:'1em',display:'inline-block'}}></span>
             )}
@@ -165,7 +158,7 @@ export const LSWidget = defineComponent({
         return (
           <div class="space-y-2">
             <div class="flex items-center gap-2 p-3 rounded-lg bg-muted/50">
-              <FolderOpen />
+              <FolderOpen class="h-4 w-4 text-primary" />
               <span class="text-sm">Directory contents for:</span>
               <code class="text-sm font-mono bg-background px-2 py-0.5 rounded">{props.path}</code>
             </div>
@@ -175,7 +168,7 @@ export const LSWidget = defineComponent({
       }
       return (
         <div class="flex items-center gap-2 p-3 rounded-lg bg-muted/50">
-          <FolderOpen />
+          <FolderOpen class="h-4 w-4 text-primary" />
           <span class="text-sm">Listing directory:</span>
           <code class="text-sm font-mono bg-background px-2 py-0.5 rounded">{props.path}</code>
           {!props.result && (
